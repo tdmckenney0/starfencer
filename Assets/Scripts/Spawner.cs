@@ -21,8 +21,10 @@ public class Spawner : MonoBehaviour {
     {
         if (transform.childCount <= 0)
         {
-            PopulatePool();
-            ShufflePool();
+            /* PopulatePool();
+            ShufflePool(); */
+
+            SpawnEnemies();
         }
 	}
 
