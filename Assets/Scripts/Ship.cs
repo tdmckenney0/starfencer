@@ -30,12 +30,6 @@ public class Ship : MonoBehaviour {
         KillOnNoHealth();
     }
 
-    // Destroy if moves off screen (miss).
-    void OnBecameInvisible()
-    {
-        Destroy();
-    }
-
     // Ship methods
 
     public void TakeDamage(int damage)

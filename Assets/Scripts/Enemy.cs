@@ -31,6 +31,12 @@ public class Enemy : Ship {
         InvokeRepeating("ChanceToRushPlayer", 1f, 1f);
     }
 
+    // Destroy if moves off screen.
+    void OnBecameInvisible()
+    {
+        Destroy();
+    }
+
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.GetComponent<Player>() != null)
