@@ -47,6 +47,11 @@ public class Ship : MonoBehaviour {
         Object.Destroy(gameObject);
     }
 
+    public bool IsActive()
+    {
+        return gameObject.activeSelf;
+    }
+
     protected void KillOnNoHealth()
     {
         if(health <= 0)

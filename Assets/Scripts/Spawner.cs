@@ -7,26 +7,40 @@ public class Spawner : MonoBehaviour {
 
     public Enemy[] prefabs;
     public Score scoreboard;
-    public Text waveIndicator; 
-    public int poolSizeX = 5;
-    public int poolSizeY = 2;
+    public Text waveIndicator;
     public int enemyPoolSize = 15;
-    public int spacing = 1;
 
     private int currentWave = 0;
 
     private List<Enemy> enemyPool;
+    private List<Enemy> activeEnemies = new List<Enemy>();
+
+    void Awake()
+    {
+        PopulatePool();
+        InvokeRepeating("CheckIfEnemiesAreActive", 1f, 1f);
+
+        //Invoke("CheckIfEnemiesAreActive", 1f)
+    }
 
 	void FixedUpdate()
     {
-        if (transform.childCount <= 0)
+        if(activeEnemies.Count <= 0)
         {
-            /* PopulatePool();
-            ShufflePool(); */
-
             SpawnEnemies();
         }
 	}
+
+    void CheckIfEnemiesAreActive()
+    {
+        for(int i = 0; i < activeEnemies.Count; i++)
+        {
+            if(!activeEnemies[i].IsActive())
+            {    
+                activeEnemies.RemoveAt(i);
+            }
+        }
+    }
 
     void PopulatePool()
     {
@@ -63,22 +77,28 @@ public class Spawner : MonoBehaviour {
 
     void SpawnEnemies()
     {
+        int rand;
 
         currentWave++;
         waveIndicator.text = "WAVE: " + currentWave.ToString();
 
-        for (int y = 0; y < poolSizeY; y++)
+        activeEnemies.Clear();
+
+        foreach(GameObject spawnPoint in GameObject.FindGameObjectsWithTag("SpawnPoint")) 
         {
-            for (int x = 0; x < poolSizeX; x++)
+
+            do
             {
-                int rand = Random.Range(0, prefabs.Length);
+                rand = Random.Range(0, enemyPool.Count - 1);
 
-                Enemy clone = Instantiate<Enemy>(prefabs[rand]);
+            } while(activeEnemies.Contains(enemyPool[rand])); 
+            
 
-                clone.transform.position = new Vector3(this.transform.position.x - (float) poolSizeX - 1, this.transform.position.y) + (new Vector3(x, y) * spacing);
-                clone.scoreboard = scoreboard;
-                clone.transform.SetParent(this.transform);
-            }
+            enemyPool[rand].transform.position = spawnPoint.transform.position; 
+            enemyPool[rand].scoreboard = scoreboard;
+            enemyPool[rand].gameObject.SetActive(true);
+
+            activeEnemies.Add(enemyPool[rand]);
         }
     }
 }

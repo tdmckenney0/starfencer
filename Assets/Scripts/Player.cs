@@ -60,8 +60,6 @@ public class Player : Ship {
 
         CheckScreenBounds();
 
-        // rb.transform.position = rb.transform.position + movement / 10;
-
         rb.AddForce(movement * speed); 
     }
 

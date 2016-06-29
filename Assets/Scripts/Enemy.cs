@@ -55,11 +55,16 @@ public class Enemy : Ship {
         Move();
     }
 
+    public override void Destroy()
+    {
+        this.gameObject.SetActive(false);
+    }
+
     // Controller Methods //
 
     void Shoot()
     {
-        if (Random.Range(0, chanceOfTakingTheShot) == 0 && currentlyRushingPlayer == false)
+        if (Random.Range(0, chanceOfTakingTheShot) == 0 && currentlyRushingPlayer == false && IsActive())
         {
             base.FireBullet();
         }
