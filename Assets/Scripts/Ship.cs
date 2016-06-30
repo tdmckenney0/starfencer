@@ -6,7 +6,8 @@ public class Ship : MonoBehaviour {
     protected Rigidbody2D rb;
     
     [Header("Ship Properties")]
-    public int health = 1;
+    public int maxHealth = 1;
+    public int curHealth;
     public float speed = 50.0f;
     public float thrusterSpeed = 5.0f;
     public int pointsWorth = 2;
@@ -18,7 +19,7 @@ public class Ship : MonoBehaviour {
     [Header("Ballistics Settings:")]
     public Bullet bullet;
     public float xMuzzleOffset = 0.0f;
-    public float yMuzzleOffset = 0.0f;
+    public float yMuzzleOffset = 0.0f;    
 
     // Unity Callbacks
 
@@ -26,15 +27,26 @@ public class Ship : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Update () {
-        KillOnNoHealth();
+    public virtual void Start()
+    {
+        curHealth = maxHealth;
     }
 
     // Ship methods
 
     public void TakeDamage(int damage)
     {
-        health = health - damage;
+        curHealth = curHealth - damage;
+
+        if(curHealth <= 0)
+        {
+            if (scoreboard != null)
+            {
+                scoreboard.IncreaseScore(pointsWorth);
+            }
+
+            Destroy();
+        }
     }
 
     protected void FireBullet()
@@ -44,7 +56,7 @@ public class Ship : MonoBehaviour {
 
     public virtual void Destroy()
     {
-        Object.Destroy(gameObject);
+        this.gameObject.SetActive(false); print("Killed Dead: " + transform.name);
     }
 
     public bool IsActive()
@@ -52,16 +64,30 @@ public class Ship : MonoBehaviour {
         return gameObject.activeSelf;
     }
 
-    protected void KillOnNoHealth()
+    public bool IsShipWithinBounds()
     {
-        if(health <= 0)
-        {
-            if(scoreboard != null)
-            {
-                scoreboard.IncreaseScore(pointsWorth);
-            }
+        Vector3 pos = transform.position;
 
-            Destroy();
+        if (pos.x < StarFencer.S.xMin)
+        {
+            return false;
         }
+
+        if (pos.x > StarFencer.S.xMax)
+        {
+            return false;
+        }
+
+        if (pos.y < StarFencer.S.yMin)
+        {
+            return false;
+        }
+
+        if (pos.y > StarFencer.S.yMax)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

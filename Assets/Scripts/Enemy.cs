@@ -17,11 +17,13 @@ public class Enemy : Ship {
     private AudioSource aud;
 
     private Vector3 iniPos;
-    private bool movRight = false; 
+    private bool movRight = false;
 
     // Unity Callbacks //
-    
-    void Start () {
+
+    public override void Start () {
+
+        base.Start();
 
         iniPos = transform.position;
 
@@ -29,12 +31,6 @@ public class Enemy : Ship {
 
         InvokeRepeating("Shoot", secondsBetweenPossibleShots, secondsBetweenPossibleShots);
         InvokeRepeating("ChanceToRushPlayer", 1f, 1f);
-    }
-
-    // Destroy if moves off screen.
-    void OnBecameInvisible()
-    {
-        Destroy();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -53,11 +49,12 @@ public class Enemy : Ship {
     void FixedUpdate()
     {
         Move();
-    }
 
-    public override void Destroy()
-    {
-        this.gameObject.SetActive(false);
+        if(!IsShipWithinBounds())
+        {
+            Destroy();
+            transform.position = Vector3.zero;
+        }
     }
 
     // Controller Methods //
@@ -76,7 +73,7 @@ public class Enemy : Ship {
 
         if (x == 0 )
         {
-            currentlyRushingPlayer = true;
+            currentlyRushingPlayer = true; print("Currently Rushing Player: " + transform.name);
             Vector3 movement = new Vector3(0.0f, -1.0f);
             rb.AddForce(movement * speed);
 

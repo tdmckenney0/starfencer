@@ -2,11 +2,6 @@
 using UnityEngine.UI;
 using System.Collections;
 
-struct CameraBounds
-{
-    public float xMin, xMax, yMin, yMax;
-}
-
 public class Player : Ship {
 
     public Text healthText;
@@ -15,21 +10,17 @@ public class Player : Ship {
     [Header("Control Setup")]
     public string xAxis = "Horizontal";
     public string yAxis = "Vertical";
-    public string shoot = "Jump";
-
-    [Header("Scene Management")]
-    public float screenPadding = 0.5f;
-
-    private CameraBounds bounds;
+    public string shoot = "Jump";    
 
     private bool gameOver = false;
 
     // Unity Callback Methods //
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
         UpdateHealthText();
-        SetScreenBounds();
+        
     }
 
     void FixedUpdate()
@@ -38,9 +29,8 @@ public class Player : Ship {
         UpdateHealthText();
     }
 
-    public new void Update()
+    void Update()
     {
-        base.Update();
         Shoot();
     }
 
@@ -48,7 +38,7 @@ public class Player : Ship {
     
     public void UpdateHealthText()
     {
-        healthText.text = "HEALTH: " + health.ToString();
+        healthText.text = "HEALTH: " + curHealth.ToString();
     }
 
     public void Move()
@@ -71,41 +61,28 @@ public class Player : Ship {
         }
     }
 
-    public void SetScreenBounds()
-    {
-        float dist = Vector3.Distance(transform.position, Camera.main.transform.position);
-
-        Vector2 bottomCorner = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, dist));
-        Vector2 topCorner = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, dist));
-
-        bounds.xMax = topCorner.x - screenPadding;
-        bounds.xMin = bottomCorner.x + screenPadding;
-        bounds.yMax = topCorner.y - screenPadding;
-        bounds.yMin = bottomCorner.y + screenPadding;
-    }
-
     public void CheckScreenBounds()
     {
         Vector3 pos = transform.position;
-            
-        if(pos.x < bounds.xMin)
+
+        if (pos.x < StarFencer.S.xMin)
         {
-            pos.x = bounds.xMin;
+            pos.x = StarFencer.S.xMin;
         }
 
-        if (pos.x > bounds.xMax)
+        if (pos.x > StarFencer.S.xMax)
         {
-            pos.x = bounds.xMax;
+            pos.x = StarFencer.S.xMax;
         }
 
-        if (pos.y < bounds.yMin)
+        if (pos.y < StarFencer.S.yMin)
         {
-            pos.y = bounds.yMin;
+            pos.y = StarFencer.S.yMin;
         }
 
-        if (pos.y > bounds.yMax)
+        if (pos.y > StarFencer.S.yMax)
         {
-            pos.y = bounds.yMax;
+            pos.y = StarFencer.S.yMax;
         }
 
         transform.position = pos;

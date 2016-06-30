@@ -21,7 +21,7 @@ public class Score : MonoBehaviour {
 
         if(score % 100 == 0)
         {
-            player.health++;
+            player.curHealth++;
         }
     }
 }
