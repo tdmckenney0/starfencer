@@ -13,40 +13,31 @@ public class Spawner : MonoBehaviour {
     private int currentWave = 0;
 
     private List<Enemy> enemyPool;
-    private List<Enemy> activeEnemies = new List<Enemy>();
 
     void Awake()
     {
         PopulatePool();
         InvokeRepeating("CheckIfEnemiesAreActive", 1f, 1f);
-
-        //Invoke("CheckIfEnemiesAreActive", 1f)
     }
-
-	void FixedUpdate()
-    {
-        if(activeEnemies.Count <= 0)
-        {
-            SpawnEnemies();
-        }
-	}
-
+    
     void CheckIfEnemiesAreActive()
     {
-        for(int i = 0; i < activeEnemies.Count; i++)
+        foreach(Enemy e in enemyPool)
         {
-            if(!activeEnemies[i].IsActive())
-            {    
-                activeEnemies.RemoveAt(i);
+            if(e.IsActive())
+            {
+                return;
             }
         }
+
+        SpawnEnemies();
     }
 
     void PopulatePool()
     {
         enemyPool = new List<Enemy>();
 
-        for(int i = 0; i < enemyPoolSize; i++)
+        for (int i = 0; i < enemyPoolSize; i++)
         {
             int rand = Random.Range(0, prefabs.Length);
 
@@ -82,23 +73,13 @@ public class Spawner : MonoBehaviour {
         currentWave++;
         waveIndicator.text = "WAVE: " + currentWave.ToString();
 
-        activeEnemies.Clear();
-
         foreach(GameObject spawnPoint in GameObject.FindGameObjectsWithTag("SpawnPoint")) 
         {
-
-            do
-            {
-                rand = Random.Range(0, enemyPool.Count - 1);
-
-            } while(activeEnemies.Contains(enemyPool[rand])); 
-            
+            rand = Random.Range(0, enemyPool.Count - 1);
 
             enemyPool[rand].transform.position = spawnPoint.transform.position; 
             enemyPool[rand].scoreboard = scoreboard;
             enemyPool[rand].gameObject.SetActive(true);
-
-            activeEnemies.Add(enemyPool[rand]);
         }
     }
 }

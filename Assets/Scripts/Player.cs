@@ -10,18 +10,19 @@ struct CameraBounds
 public class Player : Ship {
 
     public Text healthText;
+    public GameObject gameOverUI;
 
     [Header("Control Setup")]
     public string xAxis = "Horizontal";
     public string yAxis = "Vertical";
     public string shoot = "Jump";
-    public string quit = "escape";
 
     [Header("Scene Management")]
-    public string SceneToLoadOnDeath = "MainMenu";
     public float screenPadding = 0.5f;
 
-    private CameraBounds bounds; 
+    private CameraBounds bounds;
+
+    private bool gameOver = false;
 
     // Unity Callback Methods //
 
@@ -41,7 +42,6 @@ public class Player : Ship {
     {
         base.Update();
         Shoot();
-        CheckIfPlayerWantsToQuit();
     }
 
     // Functions //
@@ -63,17 +63,9 @@ public class Player : Ship {
         rb.AddForce(movement * speed); 
     }
 
-    public void CheckIfPlayerWantsToQuit()
-    {
-        if (Input.GetKeyDown(quit))
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneToLoadOnDeath);
-        }
-    }
-
     public void Shoot()
     {
-        if (Input.GetButtonDown(shoot))
+        if (Input.GetButtonDown(shoot) && !gameOver)
         {
             FireBullet();
         }
@@ -122,6 +114,12 @@ public class Player : Ship {
     public override void Destroy()
     {
         base.Destroy();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneToLoadOnDeath);
+        GameOver();
+    }
+
+    public void GameOver()
+    {
+        gameOver = true;
+        gameOverUI.gameObject.SetActive(true);
     }
 }
