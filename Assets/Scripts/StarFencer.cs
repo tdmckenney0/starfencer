@@ -3,6 +3,7 @@ using System.Collections;
 
 public class StarFencer : MonoBehaviour {
 
+    [Header("Singleton")]
     public static StarFencer S;
 
     [Header("Scene Management")]
@@ -19,12 +20,6 @@ public class StarFencer : MonoBehaviour {
         SetScreenBounds();
     }
 
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
-	// Update is called once per frame
 	void Update () {
         CheckIfPlayerWantsToQuit();
     }

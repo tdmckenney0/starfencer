@@ -3,25 +3,29 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Spawner : MonoBehaviour {
+public class Spawner : MonoBehaviour { 
 
     public Enemy[] prefabs;
     public Score scoreboard;
     public Text waveIndicator;
-    public int enemyPoolSize = 15;
+    public int enemyPoolSize = 20;
 
-    private int currentWave = 0;
+    public int currentWave = 0;
 
     public SpawnPoint[] spawnPoints;
 
-    private List<Enemy> enemyPool;
+    public List<Enemy> enemyPool;
+
+    // When Object is created in the Hierarchy //
 
     void Awake()
     {
         PopulatePool();
         spawnPoints = GameObject.FindObjectsOfType<SpawnPoint>();
-        InvokeRepeating("CheckIfEnemiesAreActive", 1f, 1f);
+        InvokeRepeating("CheckIfEnemiesAreActive", 0.5f, 0.5f);
     }
+
+    // Runs in background //
     
     void CheckIfEnemiesAreActive()
     {
@@ -35,6 +39,8 @@ public class Spawner : MonoBehaviour {
 
         SpawnEnemies();
     }
+
+    // Randomly Populate the pool. //
 
     void PopulatePool()
     {
@@ -53,21 +59,7 @@ public class Spawner : MonoBehaviour {
         }
     }
 
-    void ShufflePool()
-    {
-        List<Enemy> newEnemyPool = new List<Enemy>();
-
-        int randomIndex = 0;
-
-        while(enemyPool.Count > 0)
-        {
-            randomIndex = Random.Range(0, enemyPool.Count);
-            newEnemyPool.Add(enemyPool[randomIndex]);
-            enemyPool.RemoveAt(randomIndex);
-        }
-
-        enemyPool = newEnemyPool;
-    }
+    // Foreach spawnPoint, grab a random pool entry, move to spawnPoint, activate //
 
     void SpawnEnemies()
     {
@@ -76,13 +68,18 @@ public class Spawner : MonoBehaviour {
         currentWave++;
         waveIndicator.text = "WAVE: " + currentWave.ToString();
 
+        if(currentWave % 5 == 0)
+        {
+            PopulatePool(); // Refresh pool after five waves. //
+        }
+
         foreach (SpawnPoint spawnPoint in spawnPoints) 
         {
             do
             {
                 rand = Random.Range(0, enemyPool.Count - 1);
             }
-            while (enemyPool[rand].IsActive());
+            while (enemyPool[rand].IsActive()); // Roll the dice until we find an index *not* active //
 
             enemyPool[rand].transform.position = spawnPoint.transform.position; 
             enemyPool[rand].scoreboard = scoreboard;
