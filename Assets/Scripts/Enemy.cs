@@ -11,15 +11,24 @@ public class Enemy : Ship {
     public int chanceToRushPlayer = 60;
     public bool currentlyRushingPlayer = false;
     public AudioClip rushSound;
+
+    [Header("Exhaust Settings: ")]
     public Vector3 exhaustOffset;
-    public GameObject exhaust;
+    public GameObject exhaustPrefab;
+    private GameObject exhaustInstance;
 
     private AudioSource aud;
 
     private Vector3 iniPos;
-    private bool movRight = false;
+    private bool movRight = false;    
 
     // Unity Callbacks //
+
+    public override void Awake()
+    {
+        base.Awake();
+        CreateTailFlame();
+    }
 
     public override void Start () {
 
@@ -53,6 +62,8 @@ public class Enemy : Ship {
         if(!IsShipWithinBounds())
         {
             Destroy();
+            HideTailFlame();
+            currentlyRushingPlayer = false;
             transform.position = Vector3.zero;
         }
     }
@@ -71,20 +82,38 @@ public class Enemy : Ship {
     {
         float x = Random.Range(0, chanceToRushPlayer);
 
-        if (x == 0 )
+        if (x == 0 && IsActive())
         {
-            currentlyRushingPlayer = true; print("Currently Rushing Player: " + transform.name);
+            currentlyRushingPlayer = true;
             Vector3 movement = new Vector3(0.0f, -1.0f);
             rb.AddForce(movement * speed);
 
-            GameObject flame = Instantiate(exhaust);
-
-            flame.transform.SetParent(this.transform);
-            flame.transform.position = this.transform.position + exhaustOffset;
+            ShowTailFlame();
 
             aud.clip = rushSound;
             aud.Play();
-        }
+        } 
+    }
+
+    void CreateTailFlame()
+    {
+        GameObject flame = Instantiate(exhaustPrefab);
+
+        flame.transform.SetParent(this.transform);
+        flame.transform.position = this.transform.position + exhaustOffset;
+        flame.gameObject.SetActive(false);
+
+        exhaustInstance = flame;
+    }
+
+    void ShowTailFlame()
+    {
+        exhaustInstance.gameObject.SetActive(true);
+    }
+
+    void HideTailFlame()
+    {
+        exhaustInstance.gameObject.SetActive(false);
     }
 
     void Move()
@@ -108,5 +137,4 @@ public class Enemy : Ship {
             movRight = false;
         }
     }
-
 }

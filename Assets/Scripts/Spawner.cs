@@ -76,8 +76,6 @@ public class Spawner : MonoBehaviour {
         currentWave++;
         waveIndicator.text = "WAVE: " + currentWave.ToString();
 
-        print("-----Spawning new wave-----");
-
         foreach (SpawnPoint spawnPoint in spawnPoints) 
         {
             do

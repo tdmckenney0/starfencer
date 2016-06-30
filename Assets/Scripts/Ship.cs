@@ -23,7 +23,7 @@ public class Ship : MonoBehaviour {
 
     // Unity Callbacks
 
-    void Awake() {
+    public virtual void Awake() {
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -56,7 +56,7 @@ public class Ship : MonoBehaviour {
 
     public virtual void Destroy()
     {
-        this.gameObject.SetActive(false); print("Killed Dead: " + transform.name);
+        this.gameObject.SetActive(false); 
     }
 
     public bool IsActive()
