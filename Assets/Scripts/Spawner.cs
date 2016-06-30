@@ -12,11 +12,14 @@ public class Spawner : MonoBehaviour {
 
     private int currentWave = 0;
 
+    public SpawnPoint[] spawnPoints;
+
     private List<Enemy> enemyPool;
 
     void Awake()
     {
         PopulatePool();
+        spawnPoints = GameObject.FindObjectsOfType<SpawnPoint>();
         InvokeRepeating("CheckIfEnemiesAreActive", 1f, 1f);
     }
     
@@ -73,9 +76,13 @@ public class Spawner : MonoBehaviour {
         currentWave++;
         waveIndicator.text = "WAVE: " + currentWave.ToString();
 
-        foreach(GameObject spawnPoint in GameObject.FindGameObjectsWithTag("SpawnPoint")) 
+        foreach(SpawnPoint spawnPoint in spawnPoints) 
         {
-            rand = Random.Range(0, enemyPool.Count - 1);
+            do
+            {
+                rand = Random.Range(0, enemyPool.Count - 1);
+            }
+            while (enemyPool[rand].IsActive());
 
             enemyPool[rand].transform.position = spawnPoint.transform.position; 
             enemyPool[rand].scoreboard = scoreboard;
