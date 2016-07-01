@@ -8,9 +8,18 @@ public class Spawner : MonoBehaviour {
     public Enemy[] prefabs;
     public Score scoreboard;
     public Text waveIndicator;
+
     public int enemyPoolSize = 20;
+    public int poolRefreshRate = 5;
+    public int poolProgression = 3;
+
+    /* Every time the pool is refreshed (# of [poolRefreshRate] waves), 
+     * it increases the number of ships to choose from by [poolProgression] 
+     * thus making the game harder.
+     */
 
     public int currentWave = 0;
+    public int currentProgression = 0;
 
     public SpawnPoint[] spawnPoints;
 
@@ -45,10 +54,19 @@ public class Spawner : MonoBehaviour {
     void PopulatePool()
     {
         enemyPool = new List<Enemy>();
+        currentProgression = poolProgression + currentProgression;
+        int rand;
 
         for (int i = 0; i < enemyPoolSize; i++)
         {
-            int rand = Random.Range(0, prefabs.Length);
+            if(currentProgression <= prefabs.Length)
+            {
+                rand = Random.Range(0, currentProgression);
+            }
+            else
+            {
+                rand = Random.Range(0, prefabs.Length);
+            }       
 
             Enemy clone = Instantiate<Enemy>(prefabs[rand]);
 
@@ -68,9 +86,9 @@ public class Spawner : MonoBehaviour {
         currentWave++;
         waveIndicator.text = "WAVE: " + currentWave.ToString();
 
-        if(currentWave % 5 == 0)
+        if(currentWave % poolRefreshRate == 0)
         {
-            PopulatePool(); // Refresh pool after five waves. //
+            PopulatePool(); // Refresh pool after [poolRefreshRate] waves. //
         }
 
         foreach (SpawnPoint spawnPoint in spawnPoints) 
