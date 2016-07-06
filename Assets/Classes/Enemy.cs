@@ -70,11 +70,21 @@ public class Enemy : Ship {
 
     // Controller Methods //
 
+    public override void Destroy()
+    {
+        if (scoreboard != null)
+        {
+            scoreboard.IncreaseScore(pointsWorth);
+        }
+
+        base.Destroy();
+    }
+
     void Shoot()
     {
         if (Random.Range(0, chanceOfTakingTheShot) == 0 && currentlyRushingPlayer == false && IsActive())
         {
-            base.FireBullet();
+            FireBullet();
         }
     }
 

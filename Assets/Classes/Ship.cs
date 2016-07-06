@@ -34,17 +34,12 @@ public class Ship : MonoBehaviour {
 
     // Ship methods
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         curHealth = curHealth - damage;
 
         if(curHealth <= 0)
         {
-            if (scoreboard != null)
-            {
-                scoreboard.IncreaseScore(pointsWorth);
-            }
-
             Destroy();
         }
     }

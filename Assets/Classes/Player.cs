@@ -4,6 +4,8 @@ using System.Collections;
 
 public class Player : Ship {
 
+    public static Player player;
+
     public Text healthText;
     public GameObject gameOverUI;
 
@@ -15,6 +17,12 @@ public class Player : Ship {
     private bool gameOver = false;
 
     // Unity Callback Methods //
+
+    public override void Awake()
+    {
+        base.Awake();
+        player = this;
+    }
 
     public override void Start()
     {

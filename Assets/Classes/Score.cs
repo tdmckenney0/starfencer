@@ -5,7 +5,6 @@ using System.Collections;
 public class Score : MonoBehaviour {
 
     public Text scoreboard;
-    public Player player; 
     private int score = 0;
 
 	// Use this for initialization
@@ -18,10 +17,5 @@ public class Score : MonoBehaviour {
     {
         score = score + amount;
         scoreboard.text = "SCORE: " + score.ToString();
-
-        if(score % 100 == 0)
-        {
-            player.curHealth++;
-        }
     }
 }
