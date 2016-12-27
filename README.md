@@ -1,29 +1,21 @@
-# README #
+# Starfencer
 
-This README would normally document whatever steps are necessary to get your application up and running.
+A shoot-em-up game developed in a few weeks of spare time by Tanner Mckenney. 
 
-### What is this repository for? ###
+## Controls
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+**Arrow keys** move up, down, left, and right. 
 
-### How do I get set up? ###
+Press **Space** to shoot. 
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+## Gameplay
 
-### Contribution guidelines ###
+Ships move back-and-forth to shoot you, the player. They also will randomly rush the player in a kamikaze attack (this instantly destroys the player). 
 
-* Writing tests
-* Code review
-* Other guidelines
+The ships vary by speed, health, and damage. Orange ships are level 1 ships, whereas green ships are level 2. Each wave will see the roster randomly pick from a growing list (of increasing difficulty) of ships. The better the ship, the more points you rack-up on destruction. 
 
-### Who do I talk to? ###
+See who can score the most points before being destroyed. 
 
-* Repo owner or admin
-* Other community or team contact
+Enjoy!
+
+Tanner Mckenney
